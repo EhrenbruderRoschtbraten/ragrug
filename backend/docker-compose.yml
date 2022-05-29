@@ -1,0 +1,110 @@
+services:
+  influxdb:
+    image: influxdb:1.7
+    ports:
+      - 8086:8086
+      - 8083:8083
+    restart: always
+    environment:
+      - INFLUXDB_REPORTING_DISABLED=true
+      - INFLUXDB_DATA_QUERY_LOG_ENABLED=false
+    volumes:
+      - influxdb:/var/lib/influxdb
+    networks:
+      - network
+  couchdb:
+    image: couchdb
+    ports:
+      - 5984:5984
+    restart: always
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=123456
+    volumes:
+      - couchdb_data:/opt/couchdb/data
+      - couchdb_etc:/opt/couchdb/etc/local.d
+    networks:
+      - network
+  mqtt-server:
+    image: toke/mosquitto
+    ports:
+      - 1883:1883
+      - 9001:9001
+    restart: always
+    volumes:
+      - ragrug_mqtt_config:/mqtt/config:ro
+      - mqtt_data:/mqtt/data
+    networks:
+      - network
+    depends_on:
+      - influxdb
+      - couchdb
+  grafana:
+    image: grafana/grafana:7.3.6
+    ports:
+      - 3000:3000
+    restart: always
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_RENDERING_SERVER_URL=http://ragrug-grafana-renderer:8081/render
+      - GF_RENDERING_CALLBACK_URL=http://ragrug-grafana:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ragrug_grafana_config:/etc/grafana
+    networks:
+      - network
+    depends_on:
+      - grafana-renderer
+  grafana-renderer:
+    image: grafana/grafana-image-renderer:2.0.0-beta1
+    ports:
+      - 3001:8081
+    restart: always
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+    networks:
+      - network
+  node-red:
+    build: ./node-red
+    ports:
+      - 1880:1880
+    restart: always
+    volumes:
+      - ragrug_node-red:/ragrug_mnt
+    networks:
+      - network
+  httpserver:
+    image: danjellz/http-server
+    ports:
+      - 9999:8080
+    restart: always
+    volumes:
+      - ragrug_http:/public
+    networks:
+      - network
+    depends_on:
+      - influxdb
+      - node-red
+      - couchdb
+
+volumes:
+  influxdb:
+    driver: local
+  couchdb_data:
+    driver: local
+  couchdb_etc:
+    driver: local
+  ragrug_mqtt_config:
+    external: true
+  mqtt_data:
+    driver: local
+  ragrug_grafana_config:
+    external: true
+  grafana_data:
+    driver: local
+  ragrug_node-red:
+    external: true
+  ragrug_http:
+    external: true 
+networks:
+  network:

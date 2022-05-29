@@ -20,34 +20,38 @@ ENV HOME /root
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update -y && \
-apt-get install -y \
-apt-transport-https \
-software-properties-common \
-wget \
-htop \
-nano \
-rsync \
-build-essential \
-python \
-npm \
-&& \
-apt-get update
+    apt-get install -y \
+    apt-transport-https \
+    software-properties-common \
+    wget \
+    curl \
+    ca-certificates \
+    htop \
+    nano \
+    rsync \
+    build-essential \
+    python \
+    && \
+    apt-get update
+
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
+    apt-get update && \
+    apt-get install -y \
+    nodejs
 
 RUN npm install -g --unsafe-perm node-red
 RUN npm install --prefix /nrm \
-flat \
-node-red-contrib-flat \
-node-red-dashboard \
-node-red-contrib-python-function \
-node-red-contrib-influxdb \
-node-red-contrib-cloudantplus \
-node-red-contrib-md5 \
-node-red-node-ui-table \
-node-red-contrib-ui-upload \
-node-red-contrib-re-postgres \
-node-red-contrib-file-upload
-
-
+    flat \
+    node-red-contrib-flat \
+    node-red-dashboard \
+    node-red-contrib-python-function \
+    node-red-contrib-influxdb \
+    node-red-node-cf-cloudant \
+    node-red-contrib-md5 \
+    node-red-node-ui-table \
+    node-red-contrib-ui-upload \
+    node-red-contrib-re-postgres \
+    node-red-contrib-file-upload
 
 COPY boot.sh /runtime
 RUN chmod +x boot.sh
