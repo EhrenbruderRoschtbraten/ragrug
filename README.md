@@ -79,18 +79,8 @@ NodeRed acts as a core manager and data director. In some case it acts as an rel
 # Setup procedure
 ### Backend
 1. enter the backend folder and run from there
-1. createDockerNet.sh
-1. start.sh
-1. Make sure that the created `mnt` (ragrugs/mnt) folder is writeable
-1. setupMqtt.sh
-1. setupNodeRed.sh
-1. connect to couchdb, init and create database "world"
-    - browser: http://localhost:5984/_utils
-    - init single node
-    - default login admin/123456
-    - create database: "world"
-      - no partioning
-1. connect to NodeRed and verify
+2. sh setup.sh
+3. connect to NodeRed and verify
     - browser: http://localhost:1880
     - set couchdb user/pw in cloudant
     - init database
@@ -98,23 +88,22 @@ NodeRed acts as a core manager and data director. In some case it acts as an rel
       - Error on the debug view should now disapper (right under the deploy button)
     - init postgres
       - run through the "timestamp" nodes conencted to the "postgres" node
-1. connect to NodeRed ui
+4. connect to NodeRed UI
     - browser: http://localhost:1880/ui
     - you should see all the demo topics listed here
-1. setupGrafana.sh
-1. conenct to grafana
+5. connect to grafana
     - browser: http://localhost:3000
     - default login admin/admin
     - add datasource (configuration -> add datasource):
         - datasource-name(Casesensitive): "Inffeld"
-        - db address: http://ragrug-influxdb:8086
+        - db address: http://ragrug-influxdb-1:8086
         - database: inffeld
     - dashboards -> manage -> import
     - import from repo
       - backend/grafana/dashboards/dyndash_000.json
       - bunch of autogen graphs should have apeared
     - save the dashboard
-1. check httpserver
+6. check httpserver
     - http://localhost:9999
     - http://localhost:9999/main.html
         - this is also the entrypoint for the client
@@ -159,6 +148,11 @@ the `uiurl` which is accessed within the compiled `C#` part.
 Note: first start will take a bit longer since all WAs have to be uploaded
 works much faster on h2
 [TODO] add feedback over progress here
+
+### Teardown
+
+To delete the whole setup including all persistent data in the volumes execute `sh teaardown.sh`.
+To only delete the containers execute `docker compose down`.
 
 ### Adding sample device
 
