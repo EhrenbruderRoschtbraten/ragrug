@@ -19,7 +19,7 @@ docker container create \
 docker cp ./grafana/conf/grafana.ini copyContainer:/grafana_config/grafana.ini
 docker cp ./mqtt-server/mosquitto.conf copyContainer:/mqtt_config/mosquitto.conf
 docker cp ./node-red/settings.js copyContainer:/node-red/settings.js
-docker cp ./node-red/flows/rr_last.json copyContainer:/node-red/rr_last.json
+docker cp ./node-red/flows/rr_last.json copyContainer:/node-red/flows.json
 docker cp ./../HtmlUI/. copyContainer:/http-server
 
 # remove dummy container
