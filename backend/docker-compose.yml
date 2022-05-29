@@ -70,7 +70,7 @@ services:
       - 1880:1880
     restart: always
     volumes:
-      - ragrug_node-red:/ragrug_mnt
+      - ragrug_node-red:/ragrug_mnt/node-red
     networks:
       - network
   httpserver:
