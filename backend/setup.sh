@@ -27,7 +27,7 @@ docker stop copyContainer
 docker rm copyContainer
 
 # start docker compose
-docker compose up -d
+docker compose up -d --build
 
 # Sleep for setup Set up couchdb
 sleep 15

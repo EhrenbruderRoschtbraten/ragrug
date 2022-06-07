@@ -49,6 +49,7 @@ RUN npm install --prefix /nrm \
     node-red-node-cf-cloudant \
     node-red-contrib-md5 \
     node-red-node-ui-table \
+    node-red-node-ui-list \
     node-red-contrib-ui-upload \
     node-red-contrib-re-postgres \
     node-red-contrib-file-upload
